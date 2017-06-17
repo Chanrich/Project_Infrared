@@ -1,0 +1,18 @@
+/*
+ * Infrared_Arduino.cpp
+ *
+ * Created: 5/14/2017 9:12:18 PM
+ * Author : Rchan
+ */ 
+
+#include <avr/io.h>
+
+
+int main(void)
+{
+    /* Replace with your application code */
+    while (1) 
+    {
+    }
+}
+

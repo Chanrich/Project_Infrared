@@ -1,0 +1,22 @@
+(function (w, d, $) {
+  'use strict';
+
+  var $footerBlock = $('#footer-block');
+  $footerBlock.show();
+
+  // FIX FOOTER POSITION
+  var docHeight = $(window).height();
+  var footerHeight = $footerBlock.height();
+  var footerTop = $footerBlock.position().top + footerHeight;
+
+  if ($('#footer-block:visible').length === 1 && footerTop < docHeight) {
+    $footerBlock.css('margin-top', (docHeight - footerTop) + 'px');
+  }
+
+  // Animate the scroll to top
+  $('#go-top').on('click', function (event) {
+    event.preventDefault();
+
+    $('html, body').animate({scrollTop: 0}, 300);
+  });
+})(window, document, window.jQuery);

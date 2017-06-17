@@ -1,0 +1,305 @@
+// ArduinoGeo provides an interface to retrieve and change the geolocation of the user
+// Usage:
+//
+//  ArduinoGeo.get() // yields 'usa' or 'world'
+//  ArduinoGeo.set('world') // changes the geozone saving it into the cookie
+//  ArduinoGeo.onChange(function(geoloc) {console.log(geoloc)}) // sets a callback to be executed when geoloc changes
+var ArduinoGeo = ArduinoGeo || (function () {
+  var geoloc = getCookie('georestriction_selection');
+
+  // var cbs = [];
+
+  // getCookie return the value of a cookie
+  function getCookie(name) {
+    var value = ' ' + document.cookie;
+    var start = value.indexOf(' ' + name + '=');
+    if (start === -1) {
+      value = null;
+    } else {
+      start = value.indexOf('=', start) + 1;
+      var end = value.indexOf(';', start);
+      if (end === -1) {
+        end = value.length;
+      }
+      value = unescape(value.substring(start, end));
+    }
+    return value;
+  }
+
+  return {
+    get: function () {
+      return geoloc;
+    },
+    // set: function (location) {
+    //   document.cookie = 'georestriction_selection=' + location;
+    //   geoloc = location;
+    //   for (var i in cbs) {
+    //     if (typeof cbs[i] === 'function') {
+    //       cbs[i](geoloc);
+    //     }
+    //   }
+    // },
+    // onChange: function (cb) {
+    //   cbs.push(cb);
+    // }
+  };
+})();
+
+var ArduinoHeaderAndFooter = ArduinoHeaderAndFooter || (function () {
+  var baseUrl = 'https://cdn.arduino.cc/header-footer/8qx54mfgvi';
+
+  // Find the store url based on geolocation
+  var eustore = 'https://store.arduino.cc';
+  var usstore = 'https://store.arduino.cc/usa';
+
+  var storeUrl = eustore;
+  if (ArduinoGeo.get() === 'usa') {
+    storeUrl = usstore;
+  }
+
+  // ArduinoGeo.onChange(function (geoloc) {
+  //   if (geoloc === 'usa') {
+  //     storeUrl = usstore;
+  //   }
+  // });
+
+  var authURL = 'https://auth.arduino.cc/';
+
+  /* options object
+    parts: ['header', 'footer', 'newsletter-modal', 'create-nav'],  //@parts - do not define if you want both header and footer
+    auth: ['default', 'custom', 'noauth']
+    authOptions: //@authOptions - Oauth2 object if auth = default or other object if auth = custom,
+    lang: 'en', //@lang-code - optional lang parameter, default 'en'
+    langSelector: false //@lang-selector - optional lang-selector parameter, pass true if you want the language and currency dropdown
+  */
+  return function (options) {
+    var parts = [
+      'header',
+      'footer',
+      'newsletter-modal'
+    ];
+    if (options.parts) {
+      parts = options.parts;
+    }
+
+    var lang = 'en';
+    if (options.lang) {
+      lang = options.lang;
+    }
+
+    var createRequested = parts.indexOf('create-nav') !== -1;
+    // var headerRequested = parts.indexOf('header') !== -1;
+    var response;
+
+    return new Promise(function (resolve, reject) {
+      // Inject jquery if it doesn't exists yet'
+      if (typeof jQuery === 'undefined') {
+        return resolve(appendJS('https://code.jquery.com/jquery-2.1.1.min.js'));
+      }
+      return resolve();
+    }).then(function () {
+      // Inject the html parts
+      var partsInj = [];
+      for (var i = 0; i < parts.length; i++) {
+        partsInj.push(injectPart(parts[i], lang));
+      }
+      return Promise.all(partsInj);
+    }).then(function () {
+      // Inject css files
+      var cssInj = [];
+      for (var i = 0; i < parts.length; i++) {
+        cssInj.push(prependCSS(baseUrl + '/css/' + parts[i] + '.css'));
+      }
+      return Promise.all(cssInj);
+    }).then(function () {
+      // Inject js scripts
+      var jsInj = [];
+      for (var i = 0; i < parts.length; i++) {
+        jsInj.push(appendJS(baseUrl + '/js/' + parts[i] + '.js'));
+      }
+
+      if (options.auth === 'default') {
+        jsInj.push(appendJS(baseUrl + '/login.js'));
+      }
+      return Promise.all(jsInj);
+    }).then(function () {
+      // Init authentication if needed
+      if (options.auth === 'default') {
+        options.authOptions.cookieName = 'arduino_authenticated';
+        if (!options.authOptions.logoutURI) {
+          options.authOptions.logoutURI = authURL + 'logout';
+        }
+        if (!options.authUri) {
+          options.authUri = authURL + 'login';
+        }
+        response = initAuth(createRequested, new Oauth2(options.authOptions));
+        return response;
+      } else if (options.auth === 'custom') {
+        response = initAuth(createRequested, options.authOptions);
+        return response;
+      } else if (authURL.indexOf(window.location.hostname) !== -1) {
+        // login button for login and signup page
+        response = 'loggedout';
+        jQuery('.login-button').show();
+        jQuery('.login-button').find('a').attr('href', '/login');
+      }
+      return Promise.resolve(response);
+    }).then(function () {
+      // Show
+      if (options.langSelector) {
+        jQuery('.language-selector').show();
+      }
+
+      if (createRequested) {
+        jQuery('#ino-create-nav').show();
+      } else {
+        jQuery('.main-nav').show();
+      }
+
+      return Promise.resolve(response);
+    });
+  };
+
+  // appendJS appends a new script element to the head. Returns a promise that is resolved when the element is loaded and ready
+  function appendJS(url) {
+    return new Promise(function (resolve, reject) {
+      var headElement = document.getElementsByTagName('head')[0];
+
+      var el = document.createElement('script');
+      el.src = url;
+
+      el.onload = el.onreadystatechange = resolve;
+      el.onabort = el.onerror = reject;
+
+      headElement.appendChild(el);
+    });
+  }
+
+  // prependCSS prepends a new link element to the head. Returns a promise that is resolved when the element is loaded and ready.
+  function prependCSS(url) {
+    return new Promise(function (resolve, reject) {
+      var headElement = document.getElementsByTagName('head')[0];
+
+      var el = document.createElement('link');
+      el.rel = 'stylesheet';
+      el.href = url;
+      el.onload = el.onreadystatechange = resolve;
+      // go on the same if css not loading
+      el.onabort = el.onerror = resolve;
+      headElement.insertBefore(el, headElement.firstChild);
+    });
+  }
+
+  // injectPart inserts the html from the file into the corresponding part in the page. Returns a promise that is resolved when the operation completed.
+  function injectPart(part, lang) {
+    return new Promise(function (resolve, reject) {
+      var url = baseUrl + '/' + lang + '/' + part + '.html';
+      jQuery('#' + part).load(url, function (resp, status, xhr) {
+        if (status !== 'success') {
+          return reject('failure to inject ' + url);
+        }
+        return resolve('imported ' + url);
+      });
+    });
+  }
+
+  // initAuth hides or show the component based on the status of the authentication
+  function initAuth(create, auth) {
+    var $loginButton, $loginLink, $userPic, $defaultPic, $profile, $tokenCallback = auth.token;
+
+    $loginButton = $loginLink = jQuery('.login-button');
+    var $logoutButton = jQuery('.logout');
+
+    if (create) {
+      $userPic = jQuery('.user-profile .userpic');
+      $defaultPic = jQuery('.user-profile .default');
+      $profile = jQuery('.user-profile');
+    } else {
+      $loginLink = jQuery('.login-button a');
+      $userPic = jQuery('.profile img.user');
+      $defaultPic = jQuery('.profile svg.default');
+      $profile = jQuery('.auth-required');
+    }
+
+    return auth.token().then(function (token) {
+      return getProfile(token.token);
+    }).then(function (profile) {
+      $loginButton.hide();
+      var userAvatar = profile.public.avatar; // FIXME this is void
+      $userPic.attr('src', userAvatar);
+      $defaultPic.hide();
+      $userPic.show();
+
+      // Show default picture if user avatar not available
+      if (!userAvatar) {
+        $defaultPic.show();
+        $userPic.hide();
+      }
+
+      // Show default picture if it can't load the user avatar
+      $userPic.on('error', function () {
+        $defaultPic.show();
+        $userPic.hide();
+      });
+
+      $profile.show();
+
+      $logoutButton.on('click', function () {
+        sessionStorage.removeItem('oauth_redirect');
+        var host = window.location.href;
+        window.location.replace(authURL + 'logout?redirect_uri=' + host); 
+      });
+      return Promise.resolve($tokenCallback);
+    }).catch(function (err) {
+      //console.debug(err);
+      var loginURL = auth.redirectURI();
+
+      $loginLink.attr('href', loginURL);
+      $loginButton.show();
+      $profile.hide();
+
+      if (storeUrl.indexOf(window.location.hostname) !== -1) {
+        jQuery('.main-nav').find('.cart-dropdown-trigger').show();
+      }
+      // console.debug("hallo")
+      return Promise.resolve(loginURL);
+    });
+  }
+
+  function getProfile(token) {
+    return new Promise(function (resolve, reject) {
+      jQuery.ajax({
+        url: authURL + 'v1/users/byID/me?scopes=public',
+        success: function (data) {
+          resolve(data);
+        },
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+        error: reject,
+      });
+    });
+  }
+}());
+
+/* dependencies */
+
+/*!
+ * @copyright Copyright (c) 2017 IcoMoon.io
+ * @license   Licensed under MIT license
+ *            See https://github.com/Keyamoon/svgxuse
+ * @version   1.2.1
+ */
+(function(){if(window&&window.addEventListener){var e=Object.create(null),m,t,d=function(){clearTimeout(t);t=setTimeout(m,100)},q=function(){},u=function(){var f;window.addEventListener("resize",d,!1);window.addEventListener("orientationchange",d,!1);window.MutationObserver?(f=new MutationObserver(d),f.observe(document.documentElement,{childList:!0,subtree:!0,attributes:!0}),q=function(){try{f.disconnect(),window.removeEventListener("resize",d,!1),window.removeEventListener("orientationchange",d,
+!1)}catch(n){}}):(document.documentElement.addEventListener("DOMSubtreeModified",d,!1),q=function(){document.documentElement.removeEventListener("DOMSubtreeModified",d,!1);window.removeEventListener("resize",d,!1);window.removeEventListener("orientationchange",d,!1)})},v=function(f){function e(a){var c;void 0!==a.protocol?c=a:(c=document.createElement("a"),c.href=a);return c.protocol.replace(/:/g,"")+c.host}var d,p;window.XMLHttpRequest&&(d=new XMLHttpRequest,p=e(location),f=e(f),d=void 0===d.withCredentials&&
+""!==f&&f!==p?XDomainRequest||void 0:XMLHttpRequest);return d};m=function(){function d(){--r;0===r&&(q(),u())}function n(a){return function(){!0!==e[a.base]&&(a.isXlink?a.useEl.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","#"+a.hash):a.useEl.setAttribute("href","#"+a.hash))}}function m(a){return function(){var c=document.body,b=document.createElement("x");a.onload=null;b.innerHTML=a.responseText;if(b=b.getElementsByTagName("svg")[0])b.setAttribute("aria-hidden","true"),b.style.position=
+"absolute",b.style.width=0,b.style.height=0,b.style.overflow="hidden",c.insertBefore(b,c.firstChild);d()}}function p(a){return function(){a.onerror=null;a.ontimeout=null;d()}}var a,c,k,g,r=0,b,l=!1,h;q();h=document.getElementsByTagName("use");for(g=0;g<h.length;g+=1){try{c=h[g].getBoundingClientRect()}catch(w){c=!1}(a=h[g].getAttribute("href"))?l=!1:(a=h[g].getAttributeNS("http://www.w3.org/1999/xlink","href"),l=!0);k=a&&a.split?a.split("#"):["",""];a=k[0];k=k[1];b=c&&0===c.left&&0===c.right&&0===
+c.top&&0===c.bottom;c&&0===c.width&&0===c.height&&!b?a.length&&(b=e[a],!0!==b&&setTimeout(n({useEl:h[g],base:a,hash:k,isXlink:l}),0),void 0===b&&(l=v(a),void 0!==l&&(b=new l,e[a]=b,b.onload=m(b),b.onerror=p(b),b.ontimeout=p(b),b.open("GET",a),b.send(),r+=1))):b?a.length&&e[a]&&n({useEl:h[g],base:a,hash:k})():void 0===e[a]?e[a]=!0:e[a].onload&&(e[a].abort(),delete e[a].onload,e[a]=!0)}h="";r+=1;d()};window.addEventListener("load",function n(){window.removeEventListener("load",n,!1);t=setTimeout(m,
+0)},!1)}})();
+
+/* --- promise poly-fill --- */
+// https://github.com/taylorhakes/promise-polyfill
+!function(e){function n(){}function t(e,n){return function(){e.apply(n,arguments)}}function o(e){if("object"!=typeof this)throw new TypeError("Promises must be constructed via new");if("function"!=typeof e)throw new TypeError("not a function");this._state=0,this._handled=!1,this._value=void 0,this._deferreds=[],s(e,this)}function i(e,n){for(;3===e._state;)e=e._value;return 0===e._state?void e._deferreds.push(n):(e._handled=!0,void o._immediateFn(function(){var t=1===e._state?n.onFulfilled:n.onRejected;if(null===t)return void(1===e._state?r:u)(n.promise,e._value);var o;try{o=t(e._value)}catch(i){return void u(n.promise,i)}r(n.promise,o)}))}function r(e,n){try{if(n===e)throw new TypeError("A promise cannot be resolved with itself.");if(n&&("object"==typeof n||"function"==typeof n)){var i=n.then;if(n instanceof o)return e._state=3,e._value=n,void f(e);if("function"==typeof i)return void s(t(i,n),e)}e._state=1,e._value=n,f(e)}catch(r){u(e,r)}}function u(e,n){e._state=2,e._value=n,f(e)}function f(e){2===e._state&&0===e._deferreds.length&&o._immediateFn(function(){e._handled||o._unhandledRejectionFn(e._value)});for(var n=0,t=e._deferreds.length;n<t;n++)i(e,e._deferreds[n]);e._deferreds=null}function c(e,n,t){this.onFulfilled="function"==typeof e?e:null,this.onRejected="function"==typeof n?n:null,this.promise=t}function s(e,n){var t=!1;try{e(function(e){t||(t=!0,r(n,e))},function(e){t||(t=!0,u(n,e))})}catch(o){if(t)return;t=!0,u(n,o)}}var a=setTimeout;o.prototype["catch"]=function(e){return this.then(null,e)},o.prototype.then=function(e,t){var o=new this.constructor(n);return i(this,new c(e,t,o)),o},o.all=function(e){var n=Array.prototype.slice.call(e);return new o(function(e,t){function o(r,u){try{if(u&&("object"==typeof u||"function"==typeof u)){var f=u.then;if("function"==typeof f)return void f.call(u,function(e){o(r,e)},t)}n[r]=u,0===--i&&e(n)}catch(c){t(c)}}if(0===n.length)return e([]);for(var i=n.length,r=0;r<n.length;r++)o(r,n[r])})},o.resolve=function(e){return e&&"object"==typeof e&&e.constructor===o?e:new o(function(n){n(e)})},o.reject=function(e){return new o(function(n,t){t(e)})},o.race=function(e){return new o(function(n,t){for(var o=0,i=e.length;o<i;o++)e[o].then(n,t)})},o._immediateFn="function"==typeof setImmediate&&function(e){setImmediate(e)}||function(e){a(e,0)},o._unhandledRejectionFn=function(e){"undefined"!=typeof console&&console&&console.warn("Possible Unhandled Promise Rejection:",e)},o._setImmediateFn=function(e){o._immediateFn=e},o._setUnhandledRejectionFn=function(e){o._unhandledRejectionFn=e},"undefined"!=typeof module&&module.exports?module.exports=o:e.Promise||(e.Promise=o)}(this);
+/* --- promise poly-fill end --- */
+
+/* dependencies end */

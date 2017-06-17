@@ -1,0 +1,270 @@
+(function (w, d, $) {
+  'use strict';
+
+  var $mainNav = $('.main-nav');
+  var $arduinoNav = $('.arduino-nav');
+  var $cartSubMenu = $('.cart-submenu');
+  var $navLeft = $('.nav-left');
+  var $body = $('body');
+
+  var eustore = 'https://store.arduino.cc';
+  var usstore = 'https://store.arduino.cc/usa';
+
+  var storeUrl = eustore;
+
+  function changeLoc(geoloc) {
+    storeUrl = eustore;
+    if (geoloc === 'usa') {
+      storeUrl = usstore;
+    }
+
+    $('#buy').find('a').attr('href', storeUrl);
+
+    updateCart();
+  }
+
+  var showCart = function () {
+    $body.addClass('noscroll');
+    $cartSubMenu.show();
+  };
+
+  var hideCart = function () {
+    $body.removeClass('noscroll');
+    $cartSubMenu.hide();
+  };
+
+  var fetchCartCount = function () {
+    jQuery.ajax({
+      url: storeUrl + '/cart/api/count',
+      xhrFields: {
+        withCredentials: true
+      },
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+      success: function (res) {
+        var cartNumber = res.count;
+        var $cartBadge = jQuery('#cart').find('.badge');
+        $cartBadge.html(cartNumber);
+        $cartBadge.toggle(cartNumber > 0);
+
+        // hide cart dropdown in mobile after 3s if empty
+        if (cartNumber === 0 && window.innerWidth < 415) {
+          setTimeout(function () {
+            hideCart();
+          }, 4000);
+        }
+      },
+      error: function (err) {
+        // ignore if cart API unavailable
+        console.error(err);
+      }
+    });
+  };
+
+  var fetchMiniCart = function () {
+    jQuery.ajax({
+      url: storeUrl + '/cart/api/minicart',
+      xhrFields: {
+        withCredentials: true
+      },
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+      success: function (res) {
+        var miniCartHtml = res.content;
+        $cartSubMenu.find('.dropdown-box').html(miniCartHtml);
+      },
+      error: function (err) {
+        console.error('Can\'t fetch cart data');
+        console.error(err);
+      }
+    });
+  };
+
+  function updateCart() {
+    fetchCartCount();
+    fetchMiniCart();
+  }
+
+  changeLoc(ArduinoGeo.get());
+
+  // // updatePM queries the forum api to fetch the number of unread PM and updates the page accordingly.
+  function updatePM() {
+    jQuery.ajax({
+      dataType: 'jsonp',
+      url: 'https://forum.arduino.cc/index.php?api&pm&callback=unreadpm',
+      success: function (messagesNumber) {
+        jQuery('.profile .badge').html(messagesNumber);
+        if (messagesNumber > 0) {
+          jQuery('.profile .badge').show();
+        }
+      },
+      error: function (err) {
+        // ignore if error
+        console.error(err);
+      }
+    });
+  }
+
+  updatePM();
+
+  // ArduinoGeo.onChange(changeLoc);
+
+  // set up search form
+  var host = window.location.protocol + '//' + window.location.hostname;
+  var searchFromId = $('#searchform');
+  var searchFormMobileId = $('#searchform-mobile');
+
+  if (host.indexOf('store') !== -1) {
+    var storeSearchAction = '/catalogsearch/result/';
+    if (ArduinoGeo.get() === 'usa') {
+      storeSearchAction = '/usa/catalogsearch/result/';
+    }
+    searchFromId.attr('action', storeSearchAction);
+    searchFormMobileId.attr('action', storeSearchAction);
+  } else if (host.indexOf('blog') !== -1) {
+    searchFromId.attr('action', host);
+    searchFormMobileId.attr('action', host);
+    $('.search-typing').attr('id', 's').attr('name', 's');
+  } else {
+    searchFromId.find('.fill-it').val(host);
+    searchFormMobileId.find('.fill-it').val(host);
+  }
+
+  // var elementsMoved = false;
+  $('#search-bar').on('click', function () {
+    // $(".affix #burgermenu").animate({ "right": "470px" }, "slow");
+    // $("form#searchform").animate({ "width": "290px" }, "slow");
+
+    $arduinoNav.addClass('search-open');
+    // $(".affix #burgermenu").addClass("form-open");
+
+    // if($('body').width() < 1550) {
+    //   elementsMoved = true;
+    //   var spaceLeft = $( "#ino-header .logo" ).width() + 100;
+    //   console.log(spaceLeft);
+    //   $( "#ino-header .logo" ).animate({ "left": "-"+spaceLeft+"px" }, "slow");
+    //   //$( ".affix #main-menu" ).animate({ "left": "-"+spaceLeft+"px" }, "slow");
+    // }
+  });
+
+  $('html').on('click', function (event) {
+    if (!$(event.target).hasClass('search-typing') && event.target.id !== 'search-bar') {
+      $arduinoNav.removeClass('search-open');
+      // $(".affix #burgermenu").removeClass("form-open");
+
+      // if(elementsMoved) {
+      //   //$("form#searchform").animate({ "width": "28px" }, "slow");
+      //   $( "#ino-header .logo" ).animate({ "left": "0px" }, "slow");
+      //   //$( ".affix #main-menu" ).animate({ "left": "0px" }, "slow");
+      //   elementsMoved = false;
+      // }
+      // $("#page-header.affix #burgermenu").animate({ "right": "200px" }, "slow");
+      // if($('body').width() > 860) {
+      //   $('#page-header:not(".affix") #burgermenu').css("right", "0");
+      // }
+    }
+
+    if ($(event.target).parents('.burger-menu').length === 0 && $(event.target).parents('.nav-left').length === 0) {
+      $navLeft.removeClass('open');
+      //$body.removeClass('noscroll');
+      $navLeft.find('.nav-submenu').removeClass('open');
+    }
+
+    if ($(event.target).parents('.profile-dropdown').length === 0 && $(event.target).is('.profile-dropdown') === 0) {
+      $('.profile-dropdown').find('.nav-submenu').removeClass('open');
+    }
+  });
+
+  $(window).scroll(function () {
+    $arduinoNav.removeClass('search-open');
+    // $(".affix #burgermenu").removeClass("form-open");
+    // $("form#searchform").animate({ "width": "28px" }, "slow");
+    // if (elementsMoved) {
+    //   //$( ".affix #main-menu" ).animate({ "left": "0px" }, "slow");
+    //   $("#ino-header .logo" ).animate({ "left": "0px" }, "slow");
+    //   elementsMoved = false;
+    // }
+
+    if ($(document).scrollTop() > 100) {
+      $arduinoNav.addClass('collapsed');
+    } else {
+      $arduinoNav.removeClass('collapsed');
+    }
+  });
+
+  $('.burger-menu').on('click', function () {
+    $navLeft.toggleClass('open');
+    if ($navLeft.hasClass('open')) {
+      $body.addClass('noscroll');
+    } else {
+      $body.removeClass('noscroll');
+    }
+    $navLeft.find('.nav-submenu').removeClass('open');
+    $('.profile-dropdown').find('.nav-submenu').removeClass('open');
+  });
+
+  $('.nav-left .has-submenu').on('click', function () {
+    $navLeft.find('.has-submenu').not(this).find('.nav-submenu').removeClass('open'); // reset others
+    $(this).find('.nav-submenu').toggleClass('open');
+    hideCart();
+  });
+
+  $('.profile-dropdown').on('click', function () {
+    $(this).find('.nav-submenu').toggleClass('open');
+    $navLeft.removeClass('open');
+    $body.removeClass('noscroll');
+    hideCart();
+  });
+
+  $mainNav.find('.cart-dropdown-trigger').on('click', function () {
+    if ($('.cart-submenu:hidden').length > 0) {
+      showCart();
+      $navLeft.removeClass('open');
+      //$body.removeClass('noscroll');
+      $('.profile-dropdown').find('.nav-submenu').removeClass('open');
+      changeLoc(ArduinoGeo.get());
+    } else {
+      hideCart();
+    }
+  });
+
+  $mainNav.find('.cart-dropdown-trigger').on('mouseleave', function () {
+    hideCart();
+  });
+
+  $('.cart-close-button').on('click', function () {
+    hideCart();
+  });
+
+  // $( window ).resize(function() {
+  //   $(".dropdown").removeClass("open");
+  //   $(".submenu").removeAttr("style");
+  // });
+
+  // $( '.language-selector' ).hover(function(){
+  //   $(this).addClass('open');
+  // }, function() {
+  //   $( this ).removeClass('open');
+  // });
+
+  // $( '.profile-dropdown' ).hover(function(){
+  //   $(this).addClass('open');
+  // }, function() {
+  //   $( this ).removeClass('open');
+  // });
+
+  // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
+  // $('.dropdown').on('show.bs.dropdown', function(e){
+  //   if($('body').width() < 1024) {
+  //     $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+  //   }
+  // });
+
+  // // ADD SLIDEUP ANIMATION TO DROPDOWN //
+  // $('.dropdown').on('hide.bs.dropdown', function(e){
+  //   if($('body').width() < 1024) {
+  //     e.preventDefault();
+  //     $(this).find('.dropdown-menu').first().stop(true, true).slideUp(300, function(){
+  //       $(this).parent().removeClass('open');
+  //     });
+  //   }
+  // });
+})(window, document, window.jQuery);
