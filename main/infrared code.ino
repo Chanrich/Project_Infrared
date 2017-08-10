@@ -33,7 +33,7 @@ boolean infrared_value;
 unsigned long current_time, time_at_high, time_at_low;
 int l_microphone_analog_read_value;
 
-// Array element 0 will be garage value (it captures the time from beginning to first signal)
+// Array element 0 will be garbage value (it captures the time from beginning to first signal)
 // Array element 1 is the time the signal spent HIGH (infrared will read 0 as it is active low)
 // Array element 2 is the time the signal spend LOW (infrared will read 1 as it is active low)
 unsigned long switch_timing_pattern[PATTERN_TO_RECORD];

@@ -79,7 +79,8 @@ C_SRCS +=  \
 ../../../../../../../../Program%20Files%20(x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring_shift.c \
 ../../../../../../../../Program%20Files%20(x86)/Arduino/hardware/arduino/avr/cores/arduino/WMath.cpp \
 ../../../../../../../../Program%20Files%20(x86)/Arduino/hardware/arduino/avr/cores/arduino/WString.cpp \
-../../../../../../../../Program%20Files%20(x86)/Arduino/libraries/LiquidCrystal/src/LiquidCrystal.cpp
+../../../../../../../../Program%20Files%20(x86)/Arduino/libraries/LiquidCrystal/src/LiquidCrystal.cpp \
+../Global.c
 
 
 PREPROCESSING_SRCS += 
@@ -113,7 +114,8 @@ Infrared_Arduino/src/_micro-api-readonly/core/wiring_pulse.o \
 Infrared_Arduino/src/_micro-api-readonly/core/wiring_shift.o \
 Infrared_Arduino/src/_micro-api-readonly/core/WMath.o \
 Infrared_Arduino/src/_micro-api-readonly/core/WString.o \
-Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/LiquidCrystal.o
+Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/LiquidCrystal.o \
+Global.o
 
 OBJS_AS_ARGS +=  \
 Infrared_Arduino/src/_micro-api-readonly/core/abi.o \
@@ -140,7 +142,8 @@ Infrared_Arduino/src/_micro-api-readonly/core/wiring_pulse.o \
 Infrared_Arduino/src/_micro-api-readonly/core/wiring_shift.o \
 Infrared_Arduino/src/_micro-api-readonly/core/WMath.o \
 Infrared_Arduino/src/_micro-api-readonly/core/WString.o \
-Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/LiquidCrystal.o
+Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/LiquidCrystal.o \
+Global.o
 
 C_DEPS +=  \
 Infrared_Arduino/src/_micro-api-readonly/core/abi.d \
@@ -167,7 +170,8 @@ Infrared_Arduino/src/_micro-api-readonly/core/wiring_pulse.d \
 Infrared_Arduino/src/_micro-api-readonly/core/wiring_shift.d \
 Infrared_Arduino/src/_micro-api-readonly/core/WMath.d \
 Infrared_Arduino/src/_micro-api-readonly/core/WString.d \
-Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/LiquidCrystal.d
+Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/LiquidCrystal.d \
+Global.d
 
 C_DEPS_AS_ARGS +=  \
 Infrared_Arduino/src/_micro-api-readonly/core/abi.d \
@@ -194,11 +198,12 @@ Infrared_Arduino/src/_micro-api-readonly/core/wiring_pulse.d \
 Infrared_Arduino/src/_micro-api-readonly/core/wiring_shift.d \
 Infrared_Arduino/src/_micro-api-readonly/core/WMath.d \
 Infrared_Arduino/src/_micro-api-readonly/core/WString.d \
-Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/LiquidCrystal.d
+Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/LiquidCrystal.d \
+Global.d
 
-OUTPUT_FILE_PATH +=Infrared_Arduino.elf
+OUTPUT_FILE_PATH +=main.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=Infrared_Arduino.elf
+OUTPUT_FILE_PATH_AS_ARGS +=main.elf
 
 ADDITIONAL_DEPENDENCIES:=
 
@@ -261,24 +266,33 @@ LINKER_SCRIPT_DEP+=
 
 
 
+
+
 Infrared_Arduino/src/_micro-api-readonly/core/%.o: ../../../../../../../../Program%20Files%20(x86)/Arduino/hardware/arduino/avr/cores/arduino/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR8/GNU C Compiler : 4.9.2
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -D__AVR_ATmega328p__ -D__AVR_ATmega328P__ -DARDUINO=10800 -DARDUINO_MAIN -DF_CPU=16000000L -D__AVR__ -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR  -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src/utility" -I"C:/Program Files (x86)/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries" -I"C:/Users/Rchan/Documents/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" -I"../../../Infrared_Arduino" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -D__AVR_ATmega328p__ -D__AVR_ATmega328P__ -DARDUINO=10800 -DARDUINO_MAIN -DF_CPU=16000000L -D__AVR__ -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR  -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src/utility" -I"C:/Program Files (x86)/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries" -I"C:/Users/Rchan/Documents/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" -I"../../../main" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Infrared_Arduino/src/_micro-api-readonly/core/%.o: ../../../../../../../../Program%20Files%20(x86)/Arduino/hardware/arduino/avr/cores/arduino/%.cpp
 	@echo Building file: $<
 	@echo Invoking: AVR8/GNU C Compiler : 4.9.2
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -funsigned-char -funsigned-bitfields -D__AVR_ATmega328p__ -D__AVR_ATmega328P__ -DARDUINO=10800 -DARDUINO_MAIN -DF_CPU=16000000L -D__AVR__ -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR  -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src/utility" -I"C:/Program Files (x86)/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries" -I"C:/Users/Rchan/Documents/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" -I"../../../Infrared_Arduino" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p" -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -funsigned-char -funsigned-bitfields -D__AVR_ATmega328p__ -D__AVR_ATmega328P__ -DARDUINO=10800 -DARDUINO_MAIN -DF_CPU=16000000L -D__AVR__ -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR  -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src/utility" -I"C:/Program Files (x86)/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries" -I"C:/Users/Rchan/Documents/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" -I"../../../main" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p" -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Infrared_Arduino/src/_micro-api-readonly/libraries/LiquidCrystal/src/%.o: ../../../../../../../../Program%20Files%20(x86)/Arduino/libraries/LiquidCrystal/src/%.cpp
 	@echo Building file: $<
 	@echo Invoking: AVR8/GNU C Compiler : 4.9.2
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -funsigned-char -funsigned-bitfields -D__AVR_ATmega328p__ -D__AVR_ATmega328P__ -DARDUINO=10800 -DARDUINO_MAIN -DF_CPU=16000000L -D__AVR__ -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR  -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src/utility" -I"C:/Program Files (x86)/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries" -I"C:/Users/Rchan/Documents/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" -I"../../../Infrared_Arduino" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p" -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -funsigned-char -funsigned-bitfields -D__AVR_ATmega328p__ -D__AVR_ATmega328P__ -DARDUINO=10800 -DARDUINO_MAIN -DF_CPU=16000000L -D__AVR__ -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR  -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src/utility" -I"C:/Program Files (x86)/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries" -I"C:/Users/Rchan/Documents/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" -I"../../../main" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p" -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./%.o: .././%.c
+	@echo Building file: $<
+	@echo Invoking: AVR8/GNU C Compiler : 4.9.2
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -D__AVR_ATmega328p__ -D__AVR_ATmega328P__ -DARDUINO=10800 -DARDUINO_MAIN -DF_CPU=16000000L -D__AVR__ -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR  -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src" -I"C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/src/utility" -I"C:/Program Files (x86)/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries" -I"C:/Users/Rchan/Documents/Arduino/libraries" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" -I"C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" -I"../../../main" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr" -I"C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
@@ -307,13 +321,13 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR8/GNU Linker : 4.9.2
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="Infrared_Arduino.map" -Wl,--start-group -Wl,-lm -Wl,-lLiquidCrystal.cpp -Wl,-lLiquidCrystal.h  -Wl,--end-group -Wl,-L"C:\Users\Rchan\Documents\GitHub\Project_Infrared\library\LiquidCrystal\src"  -Wl,--gc-sections -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p"  
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="main.map" -Wl,--start-group -Wl,-lm -Wl,-lLiquidCrystal.cpp -Wl,-lLiquidCrystal.h  -Wl,--end-group -Wl,-L"C:\Users\Rchan\Documents\GitHub\Project_Infrared\library\LiquidCrystal\src"  -Wl,--gc-sections -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega328p"  
 	@echo Finished building target: $@
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "Infrared_Arduino.elf" "Infrared_Arduino.hex"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "Infrared_Arduino.elf" "Infrared_Arduino.eep" || exit 0
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "Infrared_Arduino.elf" > "Infrared_Arduino.lss"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "Infrared_Arduino.elf" "Infrared_Arduino.srec"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "Infrared_Arduino.elf"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "main.elf" "main.hex"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "main.elf" "main.eep" || exit 0
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "main.elf" > "main.lss"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "main.elf" "main.srec"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "main.elf"
 	
 	
 
@@ -325,5 +339,5 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER
 clean:
 	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
 	-$(RM) $(C_DEPS_AS_ARGS)   
-	rm -rf "Infrared_Arduino.elf" "Infrared_Arduino.a" "Infrared_Arduino.hex" "Infrared_Arduino.lss" "Infrared_Arduino.eep" "Infrared_Arduino.map" "Infrared_Arduino.srec" "Infrared_Arduino.usersignatures"
+	rm -rf "main.elf" "main.a" "main.hex" "main.lss" "main.eep" "main.map" "main.srec" "main.usersignatures"
 	

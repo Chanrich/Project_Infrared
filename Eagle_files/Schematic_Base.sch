@@ -8211,6 +8211,9 @@ Based on the following sources:
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="PUSH_BUTTON_B" library="switch" library_urn="urn:adsk.eagle:library:380" deviceset="RDT1034" device=""/>
 <part name="R12" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="0207/12" value="10k"/>
+<part name="GND6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="R13" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="0207/12" value="680"/>
+<part name="R14" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="0207/12" value="100"/>
 </parts>
 <sheets>
 <sheet>
@@ -8227,7 +8230,7 @@ Based on the following sources:
 <instance part="GND1" gate="1" x="40.64" y="93.98"/>
 <instance part="U$1" gate="G$1" x="154.94" y="157.48"/>
 <instance part="IR_LED" gate="G$1" x="246.38" y="114.3" rot="R90"/>
-<instance part="U$2" gate="G$1" x="73.66" y="30.48"/>
+<instance part="U$2" gate="G$1" x="73.66" y="66.04"/>
 <instance part="PUSH_BUTTON_A" gate="G$1" x="152.4" y="114.3"/>
 <instance part="GREEN_LED" gate="G$1" x="246.38" y="104.14" rot="R90"/>
 <instance part="RED_LED" gate="G$1" x="246.38" y="93.98" rot="R90"/>
@@ -8260,6 +8263,9 @@ Based on the following sources:
 <instance part="GND5" gate="1" x="231.14" y="48.26"/>
 <instance part="PUSH_BUTTON_B" gate="G$1" x="152.4" y="127"/>
 <instance part="R12" gate="G$1" x="167.64" y="124.46"/>
+<instance part="GND6" gate="1" x="96.52" y="55.88"/>
+<instance part="R13" gate="G$1" x="93.98" y="73.66"/>
+<instance part="R14" gate="G$1" x="233.68" y="114.3"/>
 </instances>
 <busses>
 </busses>
@@ -8352,6 +8358,17 @@ Based on the following sources:
 <wire x1="223.52" y1="50.8" x2="231.14" y2="50.8" width="0.1524" layer="91"/>
 <junction x="223.52" y="50.8"/>
 <pinref part="GND5" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="GND"/>
+<wire x1="86.36" y1="60.96" x2="96.52" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="60.96" x2="96.52" y2="58.42" width="0.1524" layer="91"/>
+<pinref part="GND6" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="IR_LED" gate="G$1" pin="C"/>
+<wire x1="251.46" y1="114.3" x2="256.54" y2="114.3" width="0.1524" layer="91"/>
+<label x="257.302" y="113.792" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -8666,6 +8683,50 @@ Based on the following sources:
 <pinref part="PUSH_BUTTON_B" gate="G$1" pin="B"/>
 <pinref part="R12" gate="G$1" pin="1"/>
 <wire x1="160.02" y1="124.46" x2="162.56" y2="124.46" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="PD6/6" class="0">
+<segment>
+<pinref part="U$2" gate="G$1" pin="OUT"/>
+<wire x1="86.36" y1="66.04" x2="96.52" y2="66.04" width="0.1524" layer="91"/>
+<label x="99.06" y="68.58" size="1.778" layer="95" rot="R180"/>
+</segment>
+<segment>
+<wire x1="109.22" y1="119.38" x2="119.38" y2="119.38" width="0.1524" layer="91"/>
+<label x="120.396" y="119.126" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$23" class="0">
+<segment>
+<pinref part="R13" gate="G$1" pin="1"/>
+<pinref part="U$2" gate="G$1" pin="VS"/>
+<wire x1="88.9" y1="73.66" x2="86.36" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="86.36" y1="73.66" x2="86.36" y2="71.12" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="5V" class="0">
+<segment>
+<pinref part="R13" gate="G$1" pin="2"/>
+<wire x1="99.06" y1="73.66" x2="104.14" y2="73.66" width="0.1524" layer="91"/>
+<label x="102.87" y="74.676" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$25" class="0">
+<segment>
+<pinref part="R14" gate="G$1" pin="2"/>
+<pinref part="IR_LED" gate="G$1" pin="A"/>
+<wire x1="238.76" y1="114.3" x2="243.84" y2="114.3" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="PD1" class="0">
+<segment>
+<pinref part="R14" gate="G$1" pin="1"/>
+<wire x1="228.6" y1="114.3" x2="223.52" y2="114.3" width="0.1524" layer="91"/>
+<label x="222.758" y="115.062" size="1.778" layer="95"/>
+</segment>
+<segment>
+<wire x1="114.3" y1="132.08" x2="109.22" y2="132.08" width="0.1524" layer="91"/>
+<label x="115.062" y="131.318" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>

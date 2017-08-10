@@ -1,0 +1,148 @@
+﻿/*
+* GLOBAL STUFF
+*/
+body, span, div, p, pre, blockquote, a, b, ol, ul, dl, li, dt, dd, th, td, table, input, select, option, h1, h2, h3, h4, h5, h6, code {
+	font-family: Arial, Serif;
+	font-size: 9pt !important ;
+}
+h1 {
+	font-size: 12pt;
+}
+h2 {
+	font-size: 11pt;
+}
+h3 {
+	font-size: 10pt;
+}
+body {
+	color: black;
+	background: white;
+}
+div#noprint {
+	display: none;
+}
+div#printheader {
+	display: inline;
+}
+div#content {
+	left: 0;
+	top: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	float: none !important;
+	width: auto;
+}
+
+/*
+* LINKS AND FOOTER STUFF
+*/
+a:link, a:visited, a.footeranchor:link, a.footeranchor:visited {
+	color: #000;
+	text-decoration:none;
+}
+
+#product-photo-wrapper.bota {
+	padding:0px;
+	border:none;
+}
+
+#update-quantity,
+#feedback,
+#sharebread,
+.attributes-td-checkbox,
+#prod-att-title-row,
+.leftdivs,
+#additional-product-options-section,
+#prod-submit,
+#reportform,
+.bota-headline,
+#leadTimeButton,
+#dkrPricing,
+.left-arrow,
+.right-arrow {
+}
+
+#update-quantity,
+#feedback,
+#sharebread,
+.attributes-td-checkbox,
+#prod-submit,
+#reportform,
+#leadTimeButton,
+#dkrPricing,
+.left-arrow,
+.right-arrow,
+.viewmore {
+	display:none;
+}
+
+.pictureList li {
+	display:inline !important;
+}
+
+#select-all {
+	color:#fff !important;
+	font-size:0px !important;
+}
+
+#footer .footer-copyright {
+	float:left;
+	padding:0px !important;
+}
+
+#footer .footer-container td {
+	padding:0px !important;
+}
+
+#footer .footer-container td:first-child {
+	display:none;
+}
+
+.bota-headline {
+	background-color:#ccc !important;
+}
+
+#header,
+.footer-container,
+.footer-copyright {
+	background:none !important;
+}
+
+
+#product-photo-side, 
+#product-details-side {
+}
+
+
+
+img[src*="help"] {
+	display:none;
+}
+
+input[name*="quantity"] {
+	border:none;
+	outline:none;
+}
+
+#footer br {
+	display:inline-block;
+	content:"";
+	width:3px;
+}
+
+td, th, tr, #product-photo-wrapper, ul, .bota-headline {
+	background-color:#fff !important;
+	color:#000 !important;
+}
+
+.footer-copyright div,
+.footer-copyright a {
+	display:none;
+}
+
+#footer .footer-container,
+#footer .footer-copyright {
+	height:0px;
+}
+

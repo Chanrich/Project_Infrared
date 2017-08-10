@@ -52,3 +52,5 @@
 
 ..\..\..\..\..\..\..\Program%2520Files%2520%28x86%29\Arduino\libraries\LiquidCrystal\src\LiquidCrystal.cpp
 
+Global.c
+

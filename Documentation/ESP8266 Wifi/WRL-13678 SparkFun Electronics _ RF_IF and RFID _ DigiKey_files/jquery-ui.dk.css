@@ -1,0 +1,37 @@
+/* Branding */
+.dialogDiv, .modalOnLoad {display:none;}
+.ui-dialog .ui-dialog-titlebar {padding: .5em 1em .5em 65px; border:solid 2px #ed1c24; background:url(//www.digikey.com/-/media/designer/global/images/modal-logo.png) #000000 left no-repeat; color: #ffffff;}	
+	.rtl .ui-dialog .ui-dialog-titlebar {padding: .5em 65px .5em 1em; background-position: right;}
+.ui-dialog .ui-dialog-title {margin: .1em 16px .2em 0;}
+	.rtl .ui-dialog .ui-dialog-title {direction:rtl; float:right; margin:.1em 0 .2em 16px;}
+.rtl .ui-dialog .ui-dialog-titlebar-close {right:auto;	left:.3em;}
+.ui-dialog-titlebar-close:not(.ui-state-hover) {background:none; border:none;}
+
+/* Overlays */
+.ui-widget-overlay {background: #000000; opacity: .75; filter: Alpha(Opacity=75);}
+.ui-widget-shadow {background: #000000; opacity: .75; filter: Alpha(Opacity=75);}
+
+/* Oversized Selected Tab Navigation */
+.oversized .ui-tabs-nav li.ui-tabs-selected {margin-bottom: 0px;  border-bottom-width: 0px;}
+.oversized .ui-tabs-nav li {margin: 4px 0.2em -1px 0px; top: 0px; font-size: 11px;} 
+.oversized .ui-tabs-nav li.ui-state-active {margin-top: 0em; font-size: 13px;}
+
+/* Bottom Tabs - add height to tabs-spacer to keep box constant minimum sized - add height and overflow to ui-tabs-panel to force height and scrolling */
+.jqBTabs .tabs-spacer {float: left;}
+.jqBTabs .ui-tabs-nav {clear: left; padding: 0 .2em .2em .2em; }
+.jqBTabs .ui-tabs-nav li {top: auto; bottom: 0; margin: 0 .2em 1px 0; border-bottom: solid 1px #999999; border-top: 0; }
+.jqBTabs .ui-tabs-nav li.ui-tabs-active {margin-top: -1px; padding-top: 1px; }
+
+/* Vertical Tabs */
+.ui-tabs-vertical .ui-tabs-nav {float:left;left: 0.25em; top: 0.25em; bottom: 0.25em; width: 150px; padding: 0.2em 0 0.3em 0.3em; display:block;} 
+.ui-tabs-vertical .ui-tabs-nav li {right: 1px; width: 100%; border-right: none; border-bottom-width: 1px !important; -moz-border-radius: 4px 0px 0px 4px; -webkit-border-radius: 4px 0px 0px 4px; border-radius: 4px 0px 0px 4px; } 
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected, .ui-tabs-vertical .ui-tabs-nav li.ui-state-active {border-right: 1px solid transparent; } 
+.ui-tabs-vertical .ui-tabs-nav li a {width: 130px; text-align: left; white-space:normal;} 
+.ui-tabs-vertical .ui-tabs-panel {padding-left:170px;}
+
+/* Vertical Tabs RTL */
+.rtl .ui-tabs-vertical .ui-tabs-nav {float:right; right: 0.25em; top: 0.25em; bottom: 0.25em; width: 150px; padding: 0.2em 0.2em 0.3em 0; display:block;} 
+.rtl .ui-tabs-vertical .ui-tabs-nav li {left:1px; width: 100%; border-left: none; border-right: 1px solid #999; border-bottom-width: 1px !important; -moz-border-radius: 0px 4px 4px 0px; -webkit-border-radius: 0px 4px 4px 0px; border-radius: 0px 4px 4px 0px;  } 
+.rtl .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected, .rtl .ui-tabs-vertical .ui-tabs-nav li.ui-state-active {border-left: 1px solid transparent; right: 2px;} 
+.rtl .ui-tabs-vertical .ui-tabs-nav li a {width: 130px; text-align: right; white-space:normal;} 
+.rtl .ui-tabs-vertical .ui-tabs-panel {padding-right:170px; padding-left:0px;}
